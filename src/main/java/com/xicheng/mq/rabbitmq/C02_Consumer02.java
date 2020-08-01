@@ -6,26 +6,33 @@ import com.xicheng.mq.rabbitmq.common.ConnectionConstant;
 import com.xicheng.mq.rabbitmq.common.ConnectionUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.TimeUnit;
+
 /**
- * description simple模式
+ * description
  *
  * @author xichengxml
- * @date 2020-07-26 11:16
+ * @date 2020-08-01 21:14
  */
 @Slf4j
-public class C01_Consumer {
+public class C02_Consumer02 {
 
     public static void main(String[] args) throws Exception {
         Channel channel = ConnectionUtil.getChannel();
         if (null == channel) {
             return;
         }
-        channel.queueDeclare(ConnectionConstant.SIMPLE_TOPIC, false, false, false, null);
+        channel.queueDeclare(ConnectionConstant.WORK_TOPIC, false, false, false, null);
+        channel.basicQos(1);
         QueueingConsumer queueingConsumer = new QueueingConsumer(channel);
-        channel.basicConsume(ConnectionConstant.SIMPLE_TOPIC, true, queueingConsumer);
+        channel.basicConsume(ConnectionConstant.WORK_TOPIC, false, queueingConsumer);
+
         QueueingConsumer.Delivery delivery = queueingConsumer.nextDelivery();
-        while (null != delivery) {
-            log.info("message: {}", new String(delivery.getBody()));
+
+        while (delivery != null) {
+            log.info("C02_Consumer02 main message: {}", new String(delivery.getBody()));
+            TimeUnit.MILLISECONDS.sleep(100);
+            channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
             delivery = queueingConsumer.nextDelivery();
         }
     }

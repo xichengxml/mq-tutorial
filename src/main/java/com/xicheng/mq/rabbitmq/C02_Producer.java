@@ -6,25 +6,25 @@ import com.xicheng.mq.rabbitmq.common.ConnectionUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * description simple模式
+ * description work模式: 两个消费者同时消费一个topic的内容
  *
  * @author xichengxml
- * @date 2020-07-26 11:09
+ * @date 2020-08-01 20:41
  */
 @Slf4j
-public class C01_Producer {
+public class C02_Producer {
 
     public static void main(String[] args) throws Exception {
         Channel channel = ConnectionUtil.getChannel();
         if (channel == null) {
             return;
         }
-        channel.queueDeclare(ConnectionConstant.SIMPLE_TOPIC, false, false, false, null);
+        channel.queueDeclare(ConnectionConstant.WORK_TOPIC, false, false, false, null);
 
-        String message = "hello simple ";
+        String message = "hello work ";
 
         for (int i = 0; i < 100; i++) {
-            channel.basicPublish("", ConnectionConstant.SIMPLE_TOPIC, null, (message + i).getBytes());
+            channel.basicPublish("", ConnectionConstant.WORK_TOPIC, null, (message + i).getBytes());
         }
 
         channel.close();

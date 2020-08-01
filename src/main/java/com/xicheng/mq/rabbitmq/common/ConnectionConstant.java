@@ -18,5 +18,7 @@ public interface ConnectionConstant {
 
     String VIRTUAL_HOST = "/xichengxml";
 
-    String TOPIC = "topic";
+    String SIMPLE_TOPIC = "simple";
+
+    String WORK_TOPIC = "work";
 }

@@ -5,6 +5,8 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+
 /**
  * description
  *
@@ -14,7 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ConnectionUtil {
 
-    private static Connection getConnetction() throws Exception {
+    private static Connection connection;
+
+    private static Connection getConnection() throws Exception {
         ConnectionFactory connectionFactory = new ConnectionFactory();
         connectionFactory.setHost(ConnectionConstant.HOST);
         connectionFactory.setPort(ConnectionConstant.PORT);
@@ -26,11 +30,21 @@ public class ConnectionUtil {
 
     public static Channel getChannel() {
         try {
-            Connection connection = getConnetction();
+            connection = getConnection();
             return connection.createChannel();
         } catch (Exception e) {
             log.info("getConnection error: ", e);
         }
         return null;
+    }
+
+    private static void closeConnection() {
+        if (null != connection) {
+            try {
+                connection.close();
+            } catch (IOException e) {
+                log.error("close connection error: ", e);
+            }
+        }
     }
 }
