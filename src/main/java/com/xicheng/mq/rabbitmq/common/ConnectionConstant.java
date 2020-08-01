@@ -21,4 +21,6 @@ public interface ConnectionConstant {
     String SIMPLE_TOPIC = "simple";
 
     String WORK_TOPIC = "work";
+
+    String PUBLISH_TOPIC = "publish";
 }
